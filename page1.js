@@ -1,71 +1,91 @@
+/* ===== ELEMENTS ===== */
 const slides = document.querySelectorAll(".slide");
-let index = 0;
+const audio = document.getElementById("audio");
+
 let started = false;
+const totalSlides = slides.length;
 
-// SLIDER
-function showSlides() {
-    slides.forEach(s => s.classList.remove("active"));
-    slides[index].classList.add("active");
+let slideDuration = 0;
+let currentSlideIndex = -1;
 
-    index = (index + 1) % slides.length;
-    setTimeout(showSlides, 3000);
+/* ===== MACHINE A ECRIRE ===== */
+function typeWriter(element, text, speed = 25) {
+    element.innerHTML = "";
+    let i = 0;
+
+    function typing() {
+        if (i < text.length) {
+            element.innerHTML += text.charAt(i);
+            i++;
+            setTimeout(typing, speed);
+        }
+    }
+
+    typing();
 }
 
-showSlides();
+/* ===== CALCUL DUREE PAR SLIDE ===== */
+audio.addEventListener("loadedmetadata", () => {
+    slideDuration = audio.duration / totalSlides;
+});
 
-// PETALES
-const petalsContainer = document.createElement("div");
-petalsContainer.classList.add("petals");
-document.body.appendChild(petalsContainer);
+/* ===== SYNCHRO AUDIO → SLIDES ===== */
+function updateSlides() {
+    if (!slideDuration) return;
 
-for (let i = 0; i < 40; i++) {
-    let petal = document.createElement("span");
-    petal.innerHTML = Math.random() > 0.5 ? "🌸" : "❤️";
-    petal.style.left = Math.random() * 100 + "vw";
-    petal.style.animationDuration = (Math.random() * 5 + 5) + "s";
-    petalsContainer.appendChild(petal);
+    let currentTime = audio.currentTime;
+
+    let index = Math.floor(currentTime / slideDuration);
+
+    if (index !== currentSlideIndex && slides[index]) {
+        currentSlideIndex = index;
+
+        slides.forEach(s => s.classList.remove("active"));
+
+        let currentSlide = slides[index];
+        currentSlide.classList.add("active");
+
+        // effet machine à écrire
+        let caption = currentSlide.querySelector(".caption");
+        let fullText = caption.innerText;
+
+        typeWriter(caption, fullText, 30);
+    }
 }
 
-// EXPERIENCE
+/* ===== START EXPERIENCE ===== */
 function startExperience() {
     if (started) return;
     started = true;
 
-    let music = document.getElementById("music");
-    let voice = document.getElementById("voice");
+    document.getElementById("startScreen").style.display = "none";
 
-    music.volume = 0;
-    music.play();
+    audio.play();
 
-    // FADE IN MUSIQUE
-    let fadeIn = setInterval(() => {
-        if (music.volume < 1) {
-            music.volume += 0.05;
-        } else {
-            clearInterval(fadeIn);
-        }
-    }, 200);
-
-    // APRES 45s → VOIX
-    setTimeout(() => {
-        let fadeOut = setInterval(() => {
-            if (music.volume > 0) {
-                music.volume -= 0.05;
-            } else {
-                clearInterval(fadeOut);
-                music.pause();
-                voice.play();
-            }
-        }, 200);
-    }, 45000);
-
-    // FIN VOIX → PAGE 2
-    voice.onended = () => {
-        document.body.style.transition = "2s";
-        document.body.style.opacity = 0;
-
-        setTimeout(() => {
-            window.location.href = "page2.html";
-        }, 2000);
-    };
+    setInterval(updateSlides, 200);
 }
+
+/* ===== REDIRECTION FIABLE ===== */
+let hasRedirected = false;
+
+function goToPage3() {
+    if (hasRedirected) return;
+    hasRedirected = true;
+
+    document.body.style.transition = "2s";
+    document.body.style.opacity = 0;
+
+    setTimeout(() => {
+        window.location.href = "page3.html";
+    }, 2000);
+}
+
+/* ===== FIN AUDIO ===== */
+audio.addEventListener("ended", goToPage3);
+
+/* ===== BACKUP SI BUG ===== */
+audio.addEventListener("timeupdate", () => {
+    if (!hasRedirected && audio.duration && audio.currentTime >= audio.duration - 0.5) {
+        goToPage3();
+    }
+});
