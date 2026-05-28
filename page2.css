@@ -1,0 +1,30 @@
+body {
+    margin: 0;
+    overflow: hidden;
+    background: linear-gradient(black, #1a001a);
+    color: white;
+}
+
+.message {
+    position: absolute;
+    top: 40%;
+    width: 100%;
+    text-align: center;
+    font-size: 2.5em;
+    animation: glow 2s infinite alternate;
+}
+
+@keyframes glow {
+    from { text-shadow: 0 0 10px pink; }
+    to { text-shadow: 0 0 30px red; }
+}
+
+.flowers span {
+    position: absolute;
+    animation: fall linear infinite;
+}
+
+@keyframes fall {
+    from { transform: translateY(-10vh) rotate(0deg); }
+    to { transform: translateY(110vh) rotate(360deg); }
+}

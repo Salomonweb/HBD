@@ -1,0 +1,56 @@
+body {
+    margin: 0;
+    overflow: hidden;
+    background: radial-gradient(circle, #0f0c29, #302b63, #24243e);
+    font-family: 'Segoe UI';
+    color: rgb(12, 11, 11);
+}
+
+/* PARTICULES */
+#particles span {
+    position: absolute;
+    width: 5px;
+    height: 5px;
+    background: pink;
+    border-radius: 50%;
+    animation: float 10s linear infinite;
+}
+
+@keyframes float {
+    from { transform: translateY(100vh); }
+    to { transform: translateY(-10vh); }
+}
+
+/* TEXTE */
+.container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+#typing {
+    font-size: 3em;
+    border-right: 2px solid pink;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+/* BOUTON */
+button {
+    margin-top: 40px;
+    padding: 15px 40px;
+    border: none;
+    border-radius: 30px;
+    background: rgba(255,255,255,0.1);
+    backdrop-filter: blur(10px);
+    color: rgb(44, 50, 158);
+    font-size: 18px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+button:hover {
+    transform: scale(1.1);
+    background: pink;
+}

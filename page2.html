@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Final ❤️</title>
+<link rel="stylesheet" href="page2.css">
+</head>
+<body>
+
+<div class="message">
+    À l’année prochaine ma reine 👑❤️ <br>
+    Que le meilleur pour nous 💕
+</div>
+
+<div class="flowers"></div>
+
+<script>
+const container = document.querySelector('.flowers');
+
+for (let i = 0; i < 100; i++) {
+    let el = document.createElement('span');
+    el.innerHTML = Math.random() > 0.5 ? '🌸' : '❤️';
+    el.style.left = Math.random() * 100 + 'vw';
+    el.style.animationDuration = (Math.random() * 5 + 3) + 's';
+    container.appendChild(el);
+}
+</script>
+
+</body>
+</html>
